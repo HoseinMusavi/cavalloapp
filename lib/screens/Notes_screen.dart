@@ -46,16 +46,16 @@ class _Note_screenState extends State<Note_screen> {
                 child: Expanded(
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: 50,
+                    itemCount: context.read<Control_Provider>().prodacts.length,
                     itemBuilder: (context, index) {
                       return Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(bottom: 0),
                           child: Container(
-                            width: Width * 0.94,
+                            width: Width,
                             decoration: BoxDecoration(
-                                color: Color.fromARGB(19, 76, 76, 76),
-                                borderRadius: BorderRadius.circular(20)),
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                borderRadius: BorderRadius.circular(0)),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -65,7 +65,7 @@ class _Note_screenState extends State<Note_screen> {
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                        "hosein_musavi",
+                                        '${context.read<Control_Provider>().prodacts[index].name}',
                                         style: TextStyle(
                                             fontFamily: 'font1',
                                             fontSize: Width * 0.04),
@@ -81,7 +81,7 @@ class _Note_screenState extends State<Note_screen> {
                                           shape: BoxShape.circle,
                                           image: DecorationImage(
                                             image: NetworkImage(
-                                                "https://nikstar.ir/wp-content/uploads/2018/04/Pretty-girl-without-makeup-6-768x768.jpg"),
+                                                '${context.read<Control_Provider>().prodacts[index].pictuer}'),
                                             fit: BoxFit.cover,
                                             // تنظیم نحوه قرارگیری عکس
                                           ),
@@ -94,7 +94,7 @@ class _Note_screenState extends State<Note_screen> {
                                   padding: const EdgeInsets.only(
                                       top: 8, right: 70, bottom: 40, left: 4),
                                   child: Text(
-                                    'سلام به همه دوستان گرامی اسمم من سمیه است و دانشجوی رشته مهندسی کامپیوتر هستم و این اولین توییتی است که مینویسم',
+                                    '${context.read<Control_Provider>().prodacts[index].body}',
                                     textDirection: TextDirection.rtl,
                                     style: TextStyle(
                                         fontFamily: 'font1',
@@ -118,7 +118,7 @@ class _Note_screenState extends State<Note_screen> {
                                         padding:
                                             const EdgeInsets.only(right: 2.0),
                                         child: Text(
-                                          ' 645',
+                                          '${context.read<Control_Provider>().prodacts[index].likes}',
                                           textDirection: TextDirection.rtl,
                                           style: TextStyle(
                                               fontFamily: 'font1',
@@ -141,6 +141,11 @@ class _Note_screenState extends State<Note_screen> {
                                       ),
                                     ],
                                   ),
+                                ),
+                                Container(
+                                  width: Width,
+                                  height: Width * .001,
+                                  color: Colors.black,
                                 )
                               ],
                             ),

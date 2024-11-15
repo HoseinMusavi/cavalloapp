@@ -1,9 +1,20 @@
 class Api_model {
-  final String titel1;
-  final String prise1;
+  final String name;
+  final String body;
+  final String pictuer;
+  final String likes;
 
-  Api_model({required this.titel1, required this.prise1});
+  Api_model({
+    required this.name,
+    required this.body,
+    required this.pictuer,
+    required this.likes,
+  });
   factory Api_model.fromJson(Map<String, dynamic> jsone) {
-    return Api_model(titel1: jsone['titel'], prise1: jsone['prise']);
+    return Api_model(
+        name: jsone['name'],
+        body: jsone['body'],
+        pictuer: jsone['pictuer'],
+        likes: jsone['likes']);
   }
 }

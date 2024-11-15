@@ -1,6 +1,4 @@
 import 'package:cavalloapp/provider/controler/provider_controler.dart';
-import 'package:cavalloapp/provider/models/model1.dart';
-import 'package:cavalloapp/provider/models/apimodels.dart';
 import 'package:cavalloapp/screens/Complaints_Screen.dart';
 import 'package:cavalloapp/screens/Notes_screen.dart';
 import 'package:cavalloapp/screens/news_screen.dart';
@@ -8,7 +6,6 @@ import 'package:cavalloapp/screens/news_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:dio/dio.dart';
 
 class Home_screen extends StatefulWidget {
   const Home_screen({super.key});
@@ -18,45 +15,15 @@ class Home_screen extends StatefulWidget {
 }
 
 class _Home_screenState extends State<Home_screen> {
-  List<Api_model> prodacts = [];
-  List<Api_model2> image = [];
-
-  Future<void> fetchdata() async {
-    try {
-      final response =
-          await Dio().get('https://672b53c7976a834dd0269eaa.mockapi.io/data');
-      final List<dynamic> data = response.data;
-      // print('${response.data}');
-      setState(() {
-        prodacts = data.map((item) => Api_model.fromJson(item)).toList();
-      });
-    } catch (error) {
-      print('Ewrror fetching data : $error');
-    }
-  }
-
-  Future<void> fetchdata2() async {
-    try {
-      final response =
-          await Dio().get('https://672b53c7976a834dd0269eaa.mockapi.io/nn');
-      final List<dynamic> data = response.data;
-      print('${response.data}');
-      setState(() {
-        image = data.map((item) => Api_model2.fromJson(item)).toList();
-      });
-    } catch (error) {
-      print('Ewrror fetching data : $error');
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    fetchdata();
-    fetchdata2();
+    context.read<Control_Provider>().fetchdata();
+    context.read<Control_Provider>().fetchdata2();
   }
 
   Widget build(BuildContext context) {
+    double Width = MediaQuery.of(context).size.width;
     return Consumer<Control_Provider>(builder: (context, provider, child) {
       return Scaffold(
         appBar: AppBar(
@@ -337,40 +304,40 @@ class _Home_screenState extends State<Home_screen> {
                         color: Colors.black, fontSize: 18, fontFamily: 'font1'),
                   ),
                 )),
-            Container(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              height: 150,
-              child: ListView.builder(
-                reverse: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: prodacts.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.all(6),
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 13, 97, 161),
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          '${prodacts[index].titel1}',
-                          style: TextStyle(
-                              color: const Color.fromARGB(255, 255, 255, 255)),
-                        ),
-                        Text(
-                          '${prodacts[index].prise1}',
-                          style: TextStyle(
-                              color: const Color.fromARGB(255, 255, 255, 255)),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+            // Container(
+            //   color: const Color.fromARGB(255, 255, 255, 255),
+            //   height: 150,
+            //   child: ListView.builder(
+            //     reverse: true,
+            //     scrollDirection: Axis.horizontal,
+            //     itemCount: context.read<Control_Provider>().prodacts.length,
+            //     itemBuilder: (context, index) {
+            //       return Container(
+            //         margin: EdgeInsets.all(6),
+            //         width: 150,
+            //         height: 150,
+            //         decoration: BoxDecoration(
+            //             color: Color.fromARGB(255, 13, 97, 161),
+            //             borderRadius: BorderRadius.circular(15)),
+            //         child: Column(
+            //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //           children: [
+            //             Text(
+            //               '${context.read<Control_Provider>().prodacts[index].titel1}',
+            //               style: TextStyle(
+            //                   color: const Color.fromARGB(255, 255, 255, 255)),
+            //             ),
+            //             Text(
+            //               '${context.read<Control_Provider>().prodacts[index].prise1}',
+            //               style: TextStyle(
+            //                   color: const Color.fromARGB(255, 255, 255, 255)),
+            //             ),
+            //           ],
+            //         ),
+            //       );
+            //     },
+            //   ),
+            // ),
             SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.only(right: 20),
@@ -398,7 +365,7 @@ class _Home_screenState extends State<Home_screen> {
               child: ListView.builder(
                 reverse: true,
                 scrollDirection: Axis.horizontal,
-                itemCount: image.length,
+                itemCount: context.read<Control_Provider>().image.length,
                 itemBuilder: (context, index) {
                   return Center(
                     child: Column(
@@ -411,7 +378,7 @@ class _Home_screenState extends State<Home_screen> {
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: NetworkImage(
-                                      '${image[index].emage_adres}'),
+                                      '${context.read<Control_Provider>().image[index].picture}'),
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius: BorderRadius.circular(15)),
@@ -419,7 +386,11 @@ class _Home_screenState extends State<Home_screen> {
                         ),
                         Column(
                           children: [
-                            Text('${image[index].titel1}'),
+                            Text(
+                              '${context.read<Control_Provider>().image[index].titele}',
+                              style: TextStyle(
+                                  fontFamily: 'font1', fontSize: Width * 0.04),
+                            ),
                           ],
                         ),
                       ],
@@ -430,48 +401,17 @@ class _Home_screenState extends State<Home_screen> {
             ),
             SizedBox(height: 50),
             Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "اکسپلور ",
-                  style: TextStyle(fontSize: 20, fontFamily: 'font1'),
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: Width,
+                height: 40,
+                color: const Color.fromARGB(31, 255, 255, 255),
+                child: Center(
+                  child: Text(
+                    "سید حسین موسوی منش",
+                    style: TextStyle(fontSize: 10, fontFamily: 'font1'),
+                  ),
                 ),
-              ),
-            ),
-            Container(
-              color: Color.fromARGB(255, 255, 255, 255),
-              height: 400,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: image.length,
-                itemBuilder: (context, index) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.all(5),
-                            width: 380,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                      '${image[index].emage_adres}'),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(15)),
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Text('${image[index].titel1}'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                },
               ),
             ),
           ],
